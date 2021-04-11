@@ -35,6 +35,7 @@ public:
 	//Sets the sun in the scene
 	void SetSun(DirectionalLight newSun);
 	void SetSun(glm::vec4 lightDir, glm::vec4 lightCol);
+	void SetRadius(float r){_radius = r;}
 
 	void EnableSun(bool enabled);
 
@@ -45,6 +46,7 @@ private:
 	UniformBuffer _sunBuffer;
 
 	bool _sunEnabled = true;
+	float _radius;
 	
 	DirectionalLight _sun;
 };
