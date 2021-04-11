@@ -38,6 +38,8 @@ layout (binding = 4) uniform sampler2D s_lightAccumTex;
 uniform mat4 u_LightSpaceMatrix;
 uniform vec3 u_CamPos;
 
+
+
 out vec4 frag_color;
 
 

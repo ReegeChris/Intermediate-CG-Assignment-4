@@ -250,8 +250,6 @@ int main() {
 		glDepthFunc(GL_LEQUAL); // New 
 
 		
-
-		
 		///////////////////////////////////// Texture Loading //////////////////////////////////////////////////
 		#pragma region Texture
 
@@ -630,8 +628,19 @@ int main() {
 			
 			obj3.get<Transform>().SetLocalPosition(currentPos.x, currentPos.y, currentPos.z);
 
-			//Sets the icosphere to the trnasform of the light direction
+			//Sets the icosphere to the transform of the light direction
 			obj10.get<Transform>().SetLocalPosition(illuminationBuffer->GetSunRef()._lightDirection);
+
+			//Lighting calculations for lighting volumne
+			//This will allow it so that fragments only have light applied to them when something passes through the mesh.
+			//Referenced from learnOpengl
+			float constant = 1.0;
+			float linear = 0.7;
+			float quadratic = 1.8;
+			float lightMax = std::fmaxf(std::fmaxf(illuminationBuffer->GetSunRef()._lightCol.r, illuminationBuffer->GetSunRef()._lightCol.g), illuminationBuffer->GetSunRef()._lightCol.b);
+			float radius =
+				(-linear + std::sqrtf(linear * linear - 4 * quadratic * (constant - (256.0 / 5.0) * lightMax)))
+				/ (2 * quadratic);
 			
 
 			if (forwards)
