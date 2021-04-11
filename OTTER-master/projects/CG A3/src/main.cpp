@@ -249,6 +249,9 @@ int main() {
 		//glEnable(GL_CULL_FACE);
 		glDepthFunc(GL_LEQUAL); // New 
 
+		
+
+		
 		///////////////////////////////////// Texture Loading //////////////////////////////////////////////////
 		#pragma region Texture
 
@@ -258,6 +261,7 @@ int main() {
 		Texture2D::sptr coilOffDif = Texture2D::LoadFromFile("images/TeslaCoilOffTex.png");
 		Texture2D::sptr coilOnDif = Texture2D::LoadFromFile("images/TeslaCoilOnTex.png");
 		Texture2D::sptr floorDif = Texture2D::LoadFromFile("images/FloorTexture.jpg");
+		Texture2D::sptr icosphereDif = Texture2D::LoadFromFile("images/FloorTexture.jpg");
 		Texture2D::sptr grass = Texture2D::LoadFromFile("images/grass.jpg");
 		Texture2D::sptr noSpec = Texture2D::LoadFromFile("images/grassSpec.png");
 		Texture2D::sptr boxDif = Texture2D::LoadFromFile("images/BoxTex.png");
@@ -331,6 +335,13 @@ int main() {
 		floorMat->Set("u_Shininess", 8.0f);
 		floorMat->Set("u_TextureMix", 0.0f);
 
+		ShaderMaterial::sptr icosphereMat = ShaderMaterial::Create();
+		icosphereMat->Shader = gBufferShader;
+		icosphereMat->Set("s_Diffuse", icosphereDif);
+		icosphereMat->Set("s_Specular", noSpec);
+		icosphereMat->Set("u_Shininess", 8.0f);
+		icosphereMat->Set("u_TextureMix", 0.0f);
+	
 		ShaderMaterial::sptr grassMat = ShaderMaterial::Create();
 		grassMat->Shader = gBufferShader;
 		grassMat->Set("s_Diffuse", grass);
@@ -427,16 +438,12 @@ int main() {
 		//Create an icosphere object
 		GameObject obj10 = scene->CreateEntity("Dynamic Light Icosphere");
 		{
-			//Sets the Mesh to be in wireframe mode
-			//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			
+
 			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Light_Icosphere.obj");
-			obj10.emplace<RendererComponent>().SetMesh(vao).SetMaterial(floorMat);
+			obj10.emplace<RendererComponent>().SetMesh(vao).SetMaterial(icosphereMat);
 			obj10.get<Transform>().SetLocalPosition(0.0f, 0.0f, 5.0f);
 			obj10.get<Transform>().SetLocalRotation(90.0f, 0.0f, 45.0f);
 			obj10.get<Transform>().SetLocalScale(1.0f, 1.0f, 1.0f);
-
-	
 			
 		}	   
 
@@ -623,6 +630,10 @@ int main() {
 			
 			obj3.get<Transform>().SetLocalPosition(currentPos.x, currentPos.y, currentPos.z);
 
+			//Sets the icosphere to the trnasform of the light direction
+			obj10.get<Transform>().SetLocalPosition(illuminationBuffer->GetSunRef()._lightDirection);
+			
+
 			if (forwards)
 			{
 				obj3.get<Transform>().SetLocalRotation(90.0f, 0.0f, 90.0f);
@@ -633,6 +644,7 @@ int main() {
 				obj3.get<Transform>().SetLocalRotation(90.0f, 0.0f, -90.0f);
 				obj4.get<RendererComponent>().SetMaterial(coilOnMat);
 			}
+
 
 			// Update the timing
 			time.CurrentFrame = glfwGetTime();
@@ -759,13 +771,18 @@ int main() {
 					currentMat = renderer.Material;
 					currentMat->Apply();
 				}
+				//Renders the icosphere in wireframe mode
+				if (renderer.Material == icosphereMat)
+				{
+					 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+				}
 
 
 				//shadowBuffer->BindDepthAsTexture(30);
 				// Render the mesh
 				BackendHandler::RenderVAO(renderer.Material->Shader, renderer.Mesh, viewProjection, transform, lightSpaceViewProj);
 
-				
+				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			});
 
 			//shadowBuffer->UnbindTexture(30);
