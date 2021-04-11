@@ -632,11 +632,9 @@ int main() {
 			
 			obj3.get<Transform>().SetLocalPosition(currentPos.x, currentPos.y, currentPos.z);
 
-<<<<<<< Updated upstream
+
 			//Sets the icosphere to the transform of the light direction
 			Light.get<Transform>().SetLocalPosition(illuminationBuffer->GetSunRef()._lightDirection);
-=======
->>>>>>> Stashed changes
 
 			//Lighting calculations for lighting volumne
 			//This will allow it so that fragments only have light applied to them when something passes through the mesh.

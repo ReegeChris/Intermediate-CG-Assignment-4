@@ -54,8 +54,7 @@ void IlluminationBuffer::ApplyEffect(GBuffer* gBuffer)
 		_shaders[Lights::DIRECTIONAL]->SetUniformMatrix("u_LightSpaceMatrix", _lightSpaceViewProj);
 		_shaders[Lights::DIRECTIONAL]->SetUniform("u_CamPos", _camPos);
 
-<<<<<<< Updated upstream
-=======
+
 		//volume lighting calculations
 		float constant = 1.0;
 		float linear = 0.7;
@@ -65,7 +64,6 @@ void IlluminationBuffer::ApplyEffect(GBuffer* gBuffer)
 			(-linear + std::sqrtf(linear * linear - 4 * quadratic * (constant - (256.0 / 5.0) * lightMax)))
 			/ (2 * quadratic);
 
->>>>>>> Stashed changes
 		//Passes radius calculation to gBuffer_directional_frag.glsl which is used to calculate volume lighting
 		_shaders[Lights::DIRECTIONAL]->SetUniform("u_Radius", _radius);
 		
