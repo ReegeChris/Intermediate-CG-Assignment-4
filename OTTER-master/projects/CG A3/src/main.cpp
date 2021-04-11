@@ -650,9 +650,9 @@ int main() {
 			illuminationBuffer->SetRadius(radius);
 
 			//Sets the icosphere to the transform of the light direction
-			obj10.get<Transform>().SetLocalPosition(illuminationBuffer->GetSunRef()._lightDirection);
+			Light.get<Transform>().SetLocalPosition(illuminationBuffer->GetSunRef()._lightDirection);
 			//Stes the icosphere to the scale of the light's radius
-			obj10.get<Transform>().SetLocalScale(radius, radius, radius);
+			Light.get<Transform>().SetLocalScale(radius, radius, radius);
 			
 			if (forwards)
 			{
