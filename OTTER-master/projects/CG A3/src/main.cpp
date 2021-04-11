@@ -634,9 +634,7 @@ int main() {
 
 			//Sets the icosphere to the transform of the light direction
 			Light.get<Transform>().SetLocalPosition(illuminationBuffer->GetSunRef()._lightDirection);
-			//Sets the icosphere to the transform of the light direction
-			Light.get<Transform>().SetLocalPosition(illuminationBuffer->GetSunRef()._lightDirection);
-
+		
 			//Lighting calculations for lighting volumne
 			//This will allow it so that fragments only have light applied to them when something passes through the mesh.
 			//Referenced from learnOpengl
@@ -645,15 +643,12 @@ int main() {
 			
 			radius = (-linearVar + std::sqrtf(linearVar * linearVar - 4 * quadraticVar * (constantVar - (256.0 / 5.0) * lightMax)))/ (2 * quadraticVar);
 
+			//Sets the icosphere to the scale of the light's radius
 			Light.get<Transform>().SetLocalScale(radius, radius, radius);
 
 			illuminationBuffer->SetRadius(radius);
 
-			//Sets the icosphere to the transform of the light direction
-			obj10.get<Transform>().SetLocalPosition(illuminationBuffer->GetSunRef()._lightDirection);
-			//Stes the icosphere to the scale of the light's radius
-			obj10.get<Transform>().SetLocalScale(radius, radius, radius);
-			
+		
 			if (forwards)
 			{
 				obj3.get<Transform>().SetLocalRotation(90.0f, 0.0f, 90.0f);
