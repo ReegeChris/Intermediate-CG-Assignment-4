@@ -55,7 +55,10 @@ void IlluminationBuffer::ApplyEffect(GBuffer* gBuffer)
 		_shaders[Lights::DIRECTIONAL]->SetUniform("u_CamPos", _camPos);
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 		//volume lighting calculations
 		float constant = 1.0;
 		float linear = 0.7;

@@ -633,8 +633,11 @@ int main() {
 			obj3.get<Transform>().SetLocalPosition(currentPos.x, currentPos.y, currentPos.z);
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 			//Sets the icosphere to the transform of the light direction
 			Light.get<Transform>().SetLocalPosition(illuminationBuffer->GetSunRef()._lightDirection);
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 
@@ -646,10 +649,13 @@ int main() {
 			
 			radius = (-linearVar + std::sqrtf(linearVar * linearVar - 4 * quadraticVar * (constantVar - (256.0 / 5.0) * lightMax)))/ (2 * quadraticVar);
 
+<<<<<<< Updated upstream
 			Light.get<Transform>().SetLocalScale(radius, radius, radius);
 
 			illuminationBuffer->SetRadius(radius);
 
+=======
+>>>>>>> Stashed changes
 			//Sets the icosphere to the transform of the light direction
 			obj10.get<Transform>().SetLocalPosition(illuminationBuffer->GetSunRef()._lightDirection);
 			//Stes the icosphere to the scale of the light's radius
