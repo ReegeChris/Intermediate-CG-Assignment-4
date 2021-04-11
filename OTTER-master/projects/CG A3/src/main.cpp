@@ -640,12 +640,18 @@ int main() {
 <<<<<<< HEAD
 =======
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 			//Sets the icosphere to the transform of the light direction
 			Light.get<Transform>().SetLocalPosition(illuminationBuffer->GetSunRef()._lightDirection);
 =======
 >>>>>>> Stashed changes
+<<<<<<< HEAD
 >>>>>>> master
 >>>>>>> master
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> ChrisBranch
 
 			//Lighting calculations for lighting volumne
 			//This will allow it so that fragments only have light applied to them when something passes through the mesh.
@@ -656,12 +662,21 @@ int main() {
 			radius = (-linearVar + std::sqrtf(linearVar * linearVar - 4 * quadraticVar * (constantVar - (256.0 / 5.0) * lightMax)))/ (2 * quadraticVar);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+<<<<<<< Updated upstream
+>>>>>>> ChrisBranch
 			Light.get<Transform>().SetLocalScale(radius, radius, radius);
 
 			illuminationBuffer->SetRadius(radius);
 
+<<<<<<< HEAD
 >>>>>>> master
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> ChrisBranch
 			//Sets the icosphere to the transform of the light direction
 			obj10.get<Transform>().SetLocalPosition(illuminationBuffer->GetSunRef()._lightDirection);
 			//Stes the icosphere to the scale of the light's radius
