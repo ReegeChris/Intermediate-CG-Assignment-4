@@ -424,6 +424,22 @@ int main() {
 			obj9.get<Transform>().SetLocalScale(0.18f, 0.18f, 0.18f);
 		}
 
+		//Create an icosphere object
+		GameObject obj10 = scene->CreateEntity("Dynamic Light Icosphere");
+		{
+			//Sets the Mesh to be in wireframe mode
+			//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			
+			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Light_Icosphere.obj");
+			obj10.emplace<RendererComponent>().SetMesh(vao).SetMaterial(floorMat);
+			obj10.get<Transform>().SetLocalPosition(0.0f, 0.0f, 5.0f);
+			obj10.get<Transform>().SetLocalRotation(90.0f, 0.0f, 45.0f);
+			obj10.get<Transform>().SetLocalScale(1.0f, 1.0f, 1.0f);
+
+	
+			
+		}	   
+
 		// Create an object to be our camera
 		GameObject cameraObject = scene->CreateEntity("Camera");
 		{
@@ -688,10 +704,12 @@ int main() {
 			illuminationBuffer->SetLightSpaceViewProj(lightSpaceViewProj);
 			glm::vec3 camPos = glm::inverse(view) * glm::vec4(0, 0, 0, 1);
 			illuminationBuffer->SetCamPos(camPos);
-
-			// Sort the renderers by shader and material, we will go for a minimizing context switches approach here,
+				
+			
+				// Sort the renderers by shader and material, we will go for a minimizing context switches approach here,
 			// but you could for instance sort front to back to optimize for fill rate if you have intensive fragment shaders
 			renderGroup.sort<RendererComponent>([](const RendererComponent& l, const RendererComponent& r) {
+			
 				// Sort by render layer first, higher numbers get drawn last
 				if (l.Material->RenderLayer < r.Material->RenderLayer) return true;
 				if (l.Material->RenderLayer > r.Material->RenderLayer) return false;
@@ -746,6 +764,7 @@ int main() {
 				//shadowBuffer->BindDepthAsTexture(30);
 				// Render the mesh
 				BackendHandler::RenderVAO(renderer.Material->Shader, renderer.Mesh, viewProjection, transform, lightSpaceViewProj);
+
 				
 			});
 
