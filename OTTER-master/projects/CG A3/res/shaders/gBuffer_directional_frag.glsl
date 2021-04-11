@@ -38,7 +38,8 @@ layout (binding = 4) uniform sampler2D s_lightAccumTex;
 uniform mat4 u_LightSpaceMatrix;
 uniform vec3 u_CamPos;
 
-
+//Radius variable 
+uniform float u_Radius;
 
 out vec4 frag_color;
 
@@ -76,26 +77,32 @@ void main() {
 	//Positions
 	vec3 fragPos = texture(s_positionTex, inUV).rgb;
 
+	//distance calculation to determine the distance between the light source and 
+	//
+	float distance = length(sun._lightDirection - fragPos);
+	
+//	if(distance < sun.u_Radius)
+//	{
+//
+		// Diffuse
+		vec3 N = normalize(inNormal);
+		vec3 lightDir = normalize(-sun._lightDirection.xyz);
+		float dif = max(dot(N, lightDir), 0.0);
+		vec3 diffuse = dif * sun._lightCol.xyz;// add diffuse intensity
 
-	// Diffuse
-	vec3 N = normalize(inNormal);
-	vec3 lightDir = normalize(-sun._lightDirection.xyz);
-	float dif = max(dot(N, lightDir), 0.0);
-	vec3 diffuse = dif * sun._lightCol.xyz;// add diffuse intensity
-
-	// Specular
-	vec3 viewDir  = normalize(u_CamPos - fragPos);
-	vec3 h        = normalize(lightDir + viewDir);
+		// Specular
+		vec3 viewDir  = normalize(u_CamPos - fragPos);
+		vec3 h        = normalize(lightDir + viewDir);
 
 	
-	float spec = pow(max(dot(N, h), 0.0), 4.0); // Shininess coefficient (can be a uniform)
-	vec3 specular = sun._lightSpecularPow * texSpec * spec * sun._lightCol.xyz; // Can also use a specular color
+		float spec = pow(max(dot(N, h), 0.0), 4.0); // Shininess coefficient (can be a uniform)
+		vec3 specular = sun._lightSpecularPow * texSpec * spec * sun._lightCol.xyz; // Can also use a specular color
 
-	vec4 fragPosLightSpace = u_LightSpaceMatrix * vec4(fragPos, 1.0f);
+		vec4 fragPosLightSpace = u_LightSpaceMatrix * vec4(fragPos, 1.0f);
 
-	float shadow = ShadowCalculation(fragPosLightSpace, sun._shadowBias);
+		float shadow = ShadowCalculation(fragPosLightSpace, sun._shadowBias);
 
-	vec3 result = (
+		vec3 result = (
 		(sun._ambientPow * sun._ambientCol.xyz) + // global ambient light
 		(1.0 - shadow) * //Shadow value
 		(diffuse + specular));
@@ -104,6 +111,8 @@ void main() {
 		{
 			result = vec3(1.0, 1.0, 1.0);
 		}
+
+	//}
 
 	frag_color = vec4(result, textureColor.a);
 }
