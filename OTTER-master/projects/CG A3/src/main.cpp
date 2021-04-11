@@ -647,7 +647,6 @@ int main() {
 			Light.get<Transform>().SetLocalScale(radius, radius, radius);
 
 			illuminationBuffer->SetRadius(radius);
-
 		
 			if (forwards)
 			{
