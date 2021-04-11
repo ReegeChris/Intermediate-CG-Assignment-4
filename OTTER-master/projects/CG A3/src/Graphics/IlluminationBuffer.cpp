@@ -54,7 +54,6 @@ void IlluminationBuffer::ApplyEffect(GBuffer* gBuffer)
 		_shaders[Lights::DIRECTIONAL]->SetUniformMatrix("u_LightSpaceMatrix", _lightSpaceViewProj);
 		_shaders[Lights::DIRECTIONAL]->SetUniform("u_CamPos", _camPos);
 
-
 		//volume lighting calculations
 		float constant = 1.0;
 		float linear = 0.7;
