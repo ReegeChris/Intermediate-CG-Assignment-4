@@ -79,11 +79,13 @@ void main() {
 
 	//distance calculation to determine the distance between the light source and 
 	//
-	float distance = length(sun._lightDirection - fragPos);
-	
-//	if(distance < sun.u_Radius)
-//	{
-//
+	float distance = length(sun._lightDirection.xyz - fragPos);
+
+	vec3 result;
+
+	if(distance <= u_Radius)
+	{
+
 		// Diffuse
 		vec3 N = normalize(inNormal);
 		vec3 lightDir = normalize(-sun._lightDirection.xyz);
@@ -102,7 +104,7 @@ void main() {
 
 		float shadow = ShadowCalculation(fragPosLightSpace, sun._shadowBias);
 
-		vec3 result = (
+		result = (
 		(sun._ambientPow * sun._ambientCol.xyz) + // global ambient light
 		(1.0 - shadow) * //Shadow value
 		(diffuse + specular));
@@ -112,7 +114,7 @@ void main() {
 			result = vec3(1.0, 1.0, 1.0);
 		}
 
-	//}
+	}
 
 	frag_color = vec4(result, textureColor.a);
 }
