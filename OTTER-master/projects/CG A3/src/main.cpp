@@ -69,6 +69,7 @@ int main() {
 	// Enable texturing
 	glEnable(GL_TEXTURE_2D);
 
+
 	// Push another scope so most memory should be freed *before* we exit the app
 	{
 		#pragma region Shader and ImGui
@@ -222,6 +223,7 @@ int main() {
 				{
 				}
 			}
+
 
 			auto name = controllables[selectedVao].get<GameObjectTag>().Name;
 			ImGui::Text(name.c_str());
@@ -572,7 +574,9 @@ int main() {
 			//skyboxObj.get_or_emplace<RendererComponent>().SetMesh(meshVao).SetMaterial(skyboxMat).SetCastShadow(false);
 		
 		////////////////////////////////////////////////////////////////////////////////////////
+		
 
+		bool drawVolumeMesh = true;
 
 		// We'll use a vector to store all our key press events for now (this should probably be a behaviour eventually)
 		std::vector<KeyPressWatcher> keyToggles;
@@ -583,13 +587,14 @@ int main() {
 			// use std::bind
 			keyToggles.emplace_back(GLFW_KEY_T, [&]() { cameraObject.get<Camera>().ToggleOrtho(); });
 			
-			//Toggles drawing specific buffers
-			keyToggles.emplace_back(GLFW_KEY_1, [&]() { drawPositionBuffer = false; drawNormalBuffer = false; drawColorBuffer = false; drawIllumBuffer = false; });
-			keyToggles.emplace_back(GLFW_KEY_2, [&]() { drawPositionBuffer = !drawPositionBuffer; drawNormalBuffer = false; drawColorBuffer = false; drawIllumBuffer = false; });
-			keyToggles.emplace_back(GLFW_KEY_3, [&]() { drawNormalBuffer = !drawNormalBuffer; drawPositionBuffer = false; drawColorBuffer = false; drawIllumBuffer = false; });
-			keyToggles.emplace_back(GLFW_KEY_4, [&]() { drawColorBuffer = !drawColorBuffer; drawPositionBuffer = false; drawNormalBuffer = false; drawIllumBuffer = false; });
-			keyToggles.emplace_back(GLFW_KEY_5, [&]() { drawIllumBuffer = !drawIllumBuffer; drawPositionBuffer = false; drawNormalBuffer = false; drawColorBuffer = false; });
 
+			keyToggles.emplace_back(GLFW_KEY_1, [&]() { drawPositionBuffer = false; drawNormalBuffer = false; drawColorBuffer = false; drawIllumBuffer = false; });
+			keyToggles.emplace_back(GLFW_KEY_2, [&]() { !drawVolumeMesh; });
+			keyToggles.emplace_back(GLFW_KEY_3, [&]() { drawPositionBuffer = !drawPositionBuffer; drawNormalBuffer = false; drawColorBuffer = false; drawIllumBuffer = false; });
+			keyToggles.emplace_back(GLFW_KEY_4, [&]() { drawNormalBuffer = !drawNormalBuffer; drawPositionBuffer = false; drawColorBuffer = false; drawIllumBuffer = false; });
+			keyToggles.emplace_back(GLFW_KEY_5, [&]() { drawColorBuffer = !drawColorBuffer; drawPositionBuffer = false; drawNormalBuffer = false; drawIllumBuffer = false; });
+			keyToggles.emplace_back(GLFW_KEY_6, [&]() { drawIllumBuffer = !drawIllumBuffer; drawPositionBuffer = false; drawNormalBuffer = false; drawColorBuffer = false; });
+			
 			controllables.push_back(obj2);
 
 			keyToggles.emplace_back(GLFW_KEY_KP_ADD, [&]() {
@@ -800,15 +805,26 @@ int main() {
 				//Renders the icosphere in wireframe mode
 				if (renderer.Material == icosphereMat)
 				{
-					 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+					glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+					//shadowBuffer->BindDepthAsTexture(30);
+				   // Render the mesh
+					BackendHandler::RenderVAO(renderer.Material->Shader, renderer.Mesh, viewProjection, transform, lightSpaceViewProj);
+
+					glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
 				}
+				else if (renderer.Material == icosphereMat && drawVolumeMesh == true) {
+					glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+				}
+				else{
+					//shadowBuffer->BindDepthAsTexture(30);
+					// Render the mesh
+					BackendHandler::RenderVAO(renderer.Material->Shader, renderer.Mesh, viewProjection, transform, lightSpaceViewProj);
 
+					glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-				//shadowBuffer->BindDepthAsTexture(30);
-				// Render the mesh
-				BackendHandler::RenderVAO(renderer.Material->Shader, renderer.Mesh, viewProjection, transform, lightSpaceViewProj);
-
-				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+				}
 			});
 
 			//shadowBuffer->UnbindTexture(30);

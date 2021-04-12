@@ -12,7 +12,9 @@ void IlluminationBuffer::Init(unsigned width, unsigned height)
 	//Illum buffer
 	index = int(_buffers.size());
 	_buffers.push_back(new Framebuffer());
-	_buffers[index]->AddColorTarget(GL_RGBA8);
+	//Changed the color target to act as a 
+	//floating point framebuffer. This also changes the color buffer's parameter
+	_buffers[index]->AddColorTarget(GL_RGBA16F);
 	_buffers[index]->AddDepthTarget();
 	_buffers[index]->Init(width, height);
 
@@ -28,6 +30,13 @@ void IlluminationBuffer::Init(unsigned width, unsigned height)
 	_shaders.push_back(Shader::Create());
 	_shaders[index]->LoadShaderPartFromFile("shaders/passthrough_vert.glsl", GL_VERTEX_SHADER);
 	_shaders[index]->LoadShaderPartFromFile("shaders/gBuffer_ambient_frag.glsl", GL_FRAGMENT_SHADER);
+	_shaders[index]->Link();
+
+	//Loads the HDR shader
+	index = int(_shaders.size());
+	_shaders.push_back(Shader::Create());
+	_shaders[index]->LoadShaderPartFromFile("shaders/passthrough_vert.glsl", GL_VERTEX_SHADER);
+	_shaders[index]->LoadShaderPartFromFile("shaders/HDR_shader_frag.glsl", GL_FRAGMENT_SHADER);
 	_shaders[index]->Link();
 
 	//Allocates sun buffer
@@ -73,6 +82,13 @@ void IlluminationBuffer::ApplyEffect(GBuffer* gBuffer)
 		//Unbind shader
 		_shaders[Lights::DIRECTIONAL]->UnBind();
 	}
+
+	//Apply the HDR effect to the scene//
+	_shaders[2]->Bind();
+
+	float hdrExposure = 3.0;
+
+	_shaders[2]->SetUniform("u_Exposure", hdrExposure);
 
 	//Bind ambient shader
 	_shaders[Lights::AMBIENT]->Bind();
