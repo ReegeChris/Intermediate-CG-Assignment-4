@@ -10,6 +10,7 @@
 #include "Graphics/Post/FilmGrain.h"
 #include "Graphics/Post/Pixelate.h"
 #include "Graphics/Post/BloomEffect.h"
+#include "Graphics/DynamicLight.h"
 
 #include <iostream>
 #include <Logging.h>

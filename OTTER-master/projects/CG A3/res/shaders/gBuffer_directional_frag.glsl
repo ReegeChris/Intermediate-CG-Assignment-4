@@ -40,9 +40,9 @@ uniform vec3 u_CamPos;
 
 //Radius variable 
 uniform float u_Radius;
+uniform std::vector Test;
 
 out vec4 frag_color;
-
 
 float ShadowCalculation(vec4 fragPosLightSpace, float bias)
 {

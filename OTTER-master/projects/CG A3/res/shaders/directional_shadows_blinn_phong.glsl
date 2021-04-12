@@ -34,7 +34,6 @@ layout (binding = 30) uniform sampler2D s_ShadowMap;
 uniform sampler2D s_Diffuse;
 uniform sampler2D s_Diffuse2;
 uniform sampler2D s_Specular;
-
 uniform float u_TextureMix;
 uniform vec3  u_CamPos;
 

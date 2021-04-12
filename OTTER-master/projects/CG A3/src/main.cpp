@@ -23,6 +23,7 @@
 #include <TextureCubeMap.h>
 #include <TextureCubeMapData.h>
 
+
 #include <Timing.h>
 #include <GameObjectTag.h>
 #include <InputHelpers.h>
@@ -354,17 +355,14 @@ int main() {
 		boxMat->Set("u_Shininess", 8.0f);
 		boxMat->Set("u_TextureMix", 0.0f);
 
+		/*
+		
+			Create an array of point lights
+			Create an array of meshes
 
+			Assign position of mesh to point light
 
-
-
-
-
-
-
-
-
-
+		*/
 
 		GameObject obj1 = scene->CreateEntity("Ground"); 
 		{
@@ -398,7 +396,6 @@ int main() {
 			obj4.get<Transform>().SetLocalRotation(90.0f, 0.0f, 0.0f);
 			obj4.get<Transform>().SetLocalScale(2.0f, 2.0f, 2.0f);
 		}
-
 		GameObject obj5 = scene->CreateEntity("Button 1");
 		{
 			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Button.obj");
@@ -443,7 +440,7 @@ int main() {
 			obj9.get<Transform>().SetLocalRotation(90.0f, 0.0f, 45.0f);
 			obj9.get<Transform>().SetLocalScale(0.18f, 0.18f, 0.18f);
 		}
-
+		
 		//Create an icosphere object
 		GameObject Light = scene->CreateEntity("Dynamic Light Icosphere");
 		{
@@ -453,8 +450,8 @@ int main() {
 			Light.get<Transform>().SetLocalPosition(0.0f, 0.0f, 5.0f);
 			Light.get<Transform>().SetLocalRotation(90.0f, 0.0f, 45.0f);
 			Light.get<Transform>().SetLocalScale(1.0f, 1.0f, 1.0f);
-			
-		}	   
+
+		}
 
 		// Create an object to be our camera
 		GameObject cameraObject = scene->CreateEntity("Camera");
@@ -545,6 +542,9 @@ int main() {
 		}
 		effects.push_back(pixelateEffect);
 
+		std::vector<DynamicLight> dynamicLights;
+		int size = 0;
+
 		#pragma endregion 
 		//////////////////////////////////////////////////////////////////////////////////////////
 
@@ -569,7 +569,6 @@ int main() {
 			
 			GameObject skyboxObj = scene->CreateEntity("skybox");  
 			skyboxObj.get<Transform>().SetLocalPosition(0.0f, 0.0f, 0.0f);
-			//skyboxObj.get_or_emplace<RendererComponent>().SetMesh(meshVao).SetMaterial(skyboxMat).SetCastShadow(false);
 		
 		////////////////////////////////////////////////////////////////////////////////////////
 
@@ -590,26 +589,66 @@ int main() {
 			keyToggles.emplace_back(GLFW_KEY_4, [&]() { drawColorBuffer = !drawColorBuffer; drawPositionBuffer = false; drawNormalBuffer = false; drawIllumBuffer = false; });
 			keyToggles.emplace_back(GLFW_KEY_5, [&]() { drawIllumBuffer = !drawIllumBuffer; drawPositionBuffer = false; drawNormalBuffer = false; drawColorBuffer = false; });
 
-			controllables.push_back(obj2);
+			controllables.push_back(Light);
 
 			keyToggles.emplace_back(GLFW_KEY_KP_ADD, [&]() {
-				BehaviourBinding::Get<SimpleMoveBehaviour>(controllables[selectedVao])->Enabled = false;
-				selectedVao++;
-				if (selectedVao >= controllables.size())
-					selectedVao = 0;
-				BehaviourBinding::Get<SimpleMoveBehaviour>(controllables[selectedVao])->Enabled = true;
-				});
-			keyToggles.emplace_back(GLFW_KEY_KP_SUBTRACT, [&]() {
-				BehaviourBinding::Get<SimpleMoveBehaviour>(controllables[selectedVao])->Enabled = false;
-				selectedVao--;
-				if (selectedVao < 0)
-					selectedVao = controllables.size() - 1;
-				BehaviourBinding::Get<SimpleMoveBehaviour>(controllables[selectedVao])->Enabled = true;
+
+					if (size<=24){
+
+						int randomNumber = rand() % 3 + 1;
+
+						//Create an icosphere object
+						GameObject tempMesh = scene->CreateEntity("Dynamic Light Icosphere");
+						{
+							VertexArrayObject:: sptr vao;
+
+							switch(randomNumber)
+							{
+							
+							case 1:
+								vao = ObjLoader::LoadFromFile("models/Light_Icosphere.obj");
+								break;
+							case 2:
+								vao = ObjLoader::LoadFromFile("models/Light_Icosphere.obj");
+								break;
+							case 3:	
+								vao = ObjLoader::LoadFromFile("models/Light_Icosphere.obj");
+								break;
+							
+							}
+
+							tempMesh.emplace<RendererComponent>().SetMesh(vao).SetMaterial(icosphereMat);
+							tempMesh.get<Transform>().SetLocalPosition(0.0f, 0.0f, 5.0f);
+							tempMesh.get<Transform>().SetLocalRotation(90.0f, 0.0f, 45.0f);
+							tempMesh.get<Transform>().SetLocalScale(1.0f, 1.0f, 1.0f);
+							BehaviourBinding::BindDisabled<SimpleMoveBehaviour>(tempMesh);
+						}
+
+						DynamicLight temp(tempMesh);
+						dynamicLights.push_back(temp);
+
+						size++;
+					}
 				});
 
-			keyToggles.emplace_back(GLFW_KEY_Y, [&]() {
-				auto behaviour = BehaviourBinding::Get<SimpleMoveBehaviour>(controllables[selectedVao]);
-				behaviour->Relative = !behaviour->Relative;
+			keyToggles.emplace_back(GLFW_KEY_7, [&]() {
+
+				if (selectedVao == -1){
+					BehaviourBinding::Get<SimpleMoveBehaviour>(controllables[0])->Enabled = false;
+				}else{
+					BehaviourBinding::Get<SimpleMoveBehaviour>(dynamicLights[selectedVao].getMesh())->Enabled = false;
+				}
+				selectedVao--;
+
+				if (selectedVao == -2)
+					selectedVao = controllables.size() - 1;
+
+				if (selectedVao == -1) {
+					BehaviourBinding::Get<SimpleMoveBehaviour>(controllables[0])->Enabled = true;
+				}
+				else {
+					BehaviourBinding::Get<SimpleMoveBehaviour>(dynamicLights[selectedVao].getMesh())->Enabled = true;
+				}
 				});
 		}
 

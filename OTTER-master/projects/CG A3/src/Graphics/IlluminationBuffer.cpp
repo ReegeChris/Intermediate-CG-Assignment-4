@@ -56,6 +56,7 @@ void IlluminationBuffer::ApplyEffect(GBuffer* gBuffer)
 
 		//Passes radius calculation to gBuffer_directional_frag.glsl which is used to calculate volume lighting
 		_shaders[Lights::DIRECTIONAL]->SetUniform("u_Radius", _radius);
+
 		
 		//Send the directional light data and bind it
 		_sunBuffer.Bind(0);
