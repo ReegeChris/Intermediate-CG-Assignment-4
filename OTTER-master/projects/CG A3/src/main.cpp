@@ -355,6 +355,17 @@ int main() {
 		boxMat->Set("u_TextureMix", 0.0f);
 
 
+
+
+
+
+
+
+
+
+
+
+
 		GameObject obj1 = scene->CreateEntity("Ground"); 
 		{
 			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/plane.obj");
