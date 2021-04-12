@@ -78,12 +78,12 @@ void main() {
 	vec3 fragPos = texture(s_positionTex, inUV).rgb;
 
 	//distance calculation to determine the distance between the light source and 
-	//
+	//the current object with the icospheres volume. Reference from openGl
 	float distance = length(sun._lightDirection.xyz - fragPos);
 
 	vec3 result;
-
-	if(distance <= u_Radius)
+	
+	if(distance < u_Radius)
 	{
 
 		// Diffuse
